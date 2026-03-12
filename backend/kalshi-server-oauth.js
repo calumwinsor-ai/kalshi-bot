@@ -3362,7 +3362,7 @@ function scheduleDailyAnalysis() {
 // ==========================================
 // PHASE 1: CORE ANALYTICS & INTELLIGENCE
 // ==========================================
-const server = app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, () => {
   console.log(`\n🚀 Kalshi Trading Bot Server running on http://localhost:${PORT}`);
   console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`📍 CORS enabled for frontend on http://localhost:5173`);
