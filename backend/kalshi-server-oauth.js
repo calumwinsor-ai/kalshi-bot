@@ -3374,14 +3374,16 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`📊 Daily analysis + automatic execution at 10:00 AM daily`);
   console.log(`📈 Real-time trading decisions with Kelly Criterion position sizing\n`);
 
-  // Start the daily analysis scheduler (deferred to avoid blocking startup)
-  setTimeout(() => {
-    try {
-      scheduleDailyAnalysis();
-    } catch (error) {
-      console.error('❌ Error scheduling daily analysis:', error);
-    }
-  }, 5000); // Start after 5 seconds to ensure server is ready
+  // Scheduler disabled for now to stabilize server
+  // console.log('✅ Server is ready!');
+  // Re-enable scheduler once stability is confirmed
+  // setTimeout(() => {
+  //   try {
+  //     scheduleDailyAnalysis();
+  //   } catch (error) {
+  //     console.error('❌ Error scheduling daily analysis:', error);
+  //   }
+  // }, 5000);
 });
 
 // Error handling middleware
