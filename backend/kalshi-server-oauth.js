@@ -9,6 +9,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const INTERNAL_API_BASE = `http://127.0.0.1:${PORT}`;
 
 // Import analysis agents
 const TradeAnalyzer = require('./trade-analyzer');
@@ -876,7 +877,7 @@ app.post('/api/analysis/daily-report', async (req, res) => {
     console.log('Step 1: Fetching bot trade history...');
 
     // Get current orders/trades (either from DEMO_MODE or real API)
-    const ordersResponse = await axios.get(`http://localhost:${PORT}/api/orders`, {
+    const ordersResponse = await axios.get(`${INTERNAL_API_BASE}/api/orders`, {
       headers: { 'User-Agent': 'Analysis-Agent/1.0' }
     });
 
@@ -934,7 +935,7 @@ app.post('/api/analysis/daily-report', async (req, res) => {
     let tradingDecisionResults = {};
     try {
       // Get current portfolio
-      const portfolioResponse = await axios.get(`http://localhost:${PORT}/api/account/portfolio`, {
+      const portfolioResponse = await axios.get(`${INTERNAL_API_BASE}/api/account/portfolio`, {
         headers: { 'User-Agent': 'Decision-Engine/1.0' }
       });
       const portfolio = portfolioResponse.data?.portfolio || MOCK_PORTFOLIO;
@@ -1000,7 +1001,7 @@ app.post('/api/analysis/daily-report', async (req, res) => {
 
       if (recommendations.length > 0) {
         // Get current portfolio
-        const portfolioResponse = await axios.get(`http://localhost:${PORT}/api/account/portfolio`, {
+        const portfolioResponse = await axios.get(`${INTERNAL_API_BASE}/api/account/portfolio`, {
           headers: { 'User-Agent': 'Decision-Engine/1.0' }
         });
         const portfolio = portfolioResponse.data?.portfolio || MOCK_PORTFOLIO;
@@ -1290,7 +1291,7 @@ app.post('/api/analysis/trading-decisions/run', async (req, res) => {
     const decisionEngine = new TradingDecisionEngine();
 
     // Get portfolio and markets
-    const portfolioResponse = await axios.get(`http://localhost:${PORT}/api/account/portfolio`, {
+    const portfolioResponse = await axios.get(`${INTERNAL_API_BASE}/api/account/portfolio`, {
       headers: { 'User-Agent': 'Decision-Engine/1.0' }
     });
     const portfolio = portfolioResponse.data?.portfolio || MOCK_PORTFOLIO;
@@ -1460,7 +1461,7 @@ app.get('/api/recommendations/top-5', authenticateSession, async (req, res) => {
     }
 
     // Get current portfolio for cash balance
-    const portfolioResponse = await axios.get(`http://localhost:${PORT}/api/account/portfolio`, {
+    const portfolioResponse = await axios.get(`${INTERNAL_API_BASE}/api/account/portfolio`, {
       headers: { 'User-Agent': 'Dashboard/1.0' }
     });
     const portfolio = portfolioResponse.data?.portfolio || MOCK_PORTFOLIO;
@@ -3340,7 +3341,7 @@ function scheduleDailyAnalysis() {
 
     if (currentApiKeyId && currentPrivateKey) {
       // Trigger the daily report endpoint internally
-      axios.post(`http://localhost:${PORT}/api/analysis/daily-report`, {})
+      axios.post(`${INTERNAL_API_BASE}/api/analysis/daily-report`, {})
         .then(response => {
           console.log('✅ Scheduled analysis completed successfully');
           if (response.data.report?.coordinatedActions) {
@@ -3362,8 +3363,8 @@ function scheduleDailyAnalysis() {
 // ==========================================
 // PHASE 1: CORE ANALYTICS & INTELLIGENCE
 // ==========================================
-const server = app.listen(PORT, () => {
-  console.log(`\n🚀 Kalshi Trading Bot Server running on http://localhost:${PORT}`);
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n🚀 Kalshi Trading Bot Server running on ${INTERNAL_API_BASE}`);
   console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`📍 CORS enabled for frontend on http://localhost:5173`);
   console.log(`🤖 Three-Agent System Integrated:`);
