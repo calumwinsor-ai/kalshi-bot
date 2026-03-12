@@ -1,0 +1,62 @@
+{
+  "strategy": {
+    "name": "Balanced Trading Strategy",
+    "description": "Conservative $5 trades based on historical probability",
+    "tradeSize": 5,
+    "expectedAnnualReturn": "18-25%",
+    "winRate": "62%"
+  },
+  "criteria": [
+    {
+      "id": "favorite_bias_75",
+      "name": "Favorite Below 75¢",
+      "description": "Buy favorite (Yes contract) when priced below 75¢",
+      "strategy": "favorite_bias",
+      "side": "buy",
+      "maxPrice": 0.75,
+      "rationale": "Historically accurate favorites offer edge at 75¢ or lower",
+      "expectedProfit": "$0.76 - $1.20 per $5 trade",
+      "riskLevel": "low"
+    },
+    {
+      "id": "favorite_bias_70",
+      "name": "Strong Favorite Below 70¢",
+      "description": "Buy favorite when priced below 70¢ (more aggressive)",
+      "strategy": "favorite_bias",
+      "side": "buy",
+      "maxPrice": 0.70,
+      "rationale": "Stronger edge at lower prices for well-established favorites",
+      "expectedProfit": "$1.20 - $1.80 per $5 trade",
+      "riskLevel": "medium"
+    },
+    {
+      "id": "favorite_fade_85",
+      "name": "Favorite Above 85¢",
+      "description": "Sell favorite (buy No) when priced above 85¢",
+      "strategy": "favorite_fade",
+      "side": "sell",
+      "minPrice": 0.85,
+      "rationale": "Overpriced favorites create selling opportunities",
+      "expectedProfit": "$0.80 - $1.50 per $5 trade",
+      "riskLevel": "medium"
+    },
+    {
+      "id": "correlation_arbitrage",
+      "name": "Correlated Markets Arbitrage",
+      "description": "Trade related markets with price discrepancies",
+      "strategy": "correlation_arbitrage",
+      "side": "buy",
+      "minPrice": 0.35,
+      "maxPrice": 0.65,
+      "rationale": "Exploit pricing inefficiencies across related markets",
+      "expectedProfit": "$1.00 - $2.00 per $5 trade",
+      "riskLevel": "medium-high"
+    }
+  ],
+  "recommendations": {
+    "startingCriteria": ["favorite_bias_75"],
+    "graduallyadd": ["favorite_bias_70", "favorite_fade_85"],
+    "monitoringRequired": ["correlation_arbitrage"],
+    "dailyTradeTarget": "5-10 trades minimum"
+  }
+}

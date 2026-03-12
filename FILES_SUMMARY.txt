@@ -1,0 +1,338 @@
+═══════════════════════════════════════════════════════════════════
+  KALSHI TRADING BOT - COMPLETE FILE STRUCTURE & DESCRIPTIONS
+═══════════════════════════════════════════════════════════════════
+
+PROJECT DIRECTORY: /Users/calumwinsor/Desktop/Claude/kalshi-bot/
+
+═══════════════════════════════════════════════════════════════════
+BACKEND SERVER (Node.js + Express)
+═══════════════════════════════════════════════════════════════════
+
+backend/kalshi-server-oauth.js
+  Purpose: Main OAuth authentication server
+  What it does:
+    - Receives login requests from frontend
+    - Sends credentials to Kalshi API (securely from .env)
+    - Returns safe session tokens to frontend
+    - Provides market data endpoints
+    - Executes trades via API
+    - Controls trading bot process
+  Endpoints:
+    POST /api/auth/login - Authenticate with Kalshi
+    GET /api/auth/status - Check if authenticated
+    POST /api/auth/logout - Logout and cleanup
+    GET /api/markets - Get open markets
+    POST /api/orders - Place trades
+    GET /api/orders - Get order history
+    POST /api/bot/start - Start trading bot
+    POST /api/bot/stop - Stop trading bot
+    GET /api/bot/status - Bot running status
+
+backend/trading-bot.js
+  Purpose: Automated trading bot process (subprocess)
+  What it does:
+    - Spawned by main server when "Start Bot" clicked
+    - Polls Kalshi API every 5 seconds for open markets
+    - Compares market data against your criteria
+    - Automatically executes trades when criteria match
+    - Tracks executed trades to avoid duplicates
+    - Graceful shutdown on stop signal
+
+backend/package.json
+  Purpose: Node.js project configuration
+  Contains:
+    - Project metadata
+    - npm scripts (start, dev, bot)
+    - Dependencies:
+      * express - Web server framework
+      * axios - HTTP client for API calls
+      * cors - Enable cross-origin requests
+      * dotenv - Load environment variables
+
+═══════════════════════════════════════════════════════════════════
+FRONTEND (React + Vite)
+═══════════════════════════════════════════════════════════════════
+
+frontend/src/App.jsx
+  Purpose: Main React component - entire trading interface
+  What it includes:
+    - Login form (email/password)
+    - Dashboard tab (portfolio view, bot control)
+    - Trading Criteria tab (add/remove criteria)
+    - Activity tab (view executed trades)
+    - Real-time status indicators
+    - Form handling and API communication
+
+frontend/src/App.css
+  Purpose: Complete styling for the interface
+  Includes:
+    - Responsive design (mobile + desktop)
+    - Purple gradient theme
+    - Card layouts for portfolio/orders
+    - Form styling
+    - Button styles and animations
+    - Dark mode compatible
+
+frontend/src/main.jsx
+  Purpose: React entry point
+  What it does:
+    - Initializes React
+    - Mounts App component to DOM
+    - Imports CSS styles
+
+frontend/vite.config.js
+  Purpose: Vite build tool configuration
+  Settings:
+    - Dev server on port 5173
+    - Local host only
+    - Build output directory
+    - Source maps enabled
+
+frontend/index.html
+  Purpose: Base HTML page
+  Contains:
+    - Document structure
+    - Head meta tags
+    - Root div for React
+    - Script tag for main.jsx
+
+frontend/package.json
+  Purpose: Frontend project configuration
+  Contains:
+    - npm scripts (dev, build, preview)
+    - React dependencies
+    - Vite dev dependencies
+
+═══════════════════════════════════════════════════════════════════
+CONFIGURATION FILES
+═══════════════════════════════════════════════════════════════════
+
+.env.example
+  Purpose: Template for environment variables
+  What goes here:
+    - KALSHI_EMAIL - Your Kalshi account email
+    - KALSHI_PASSWORD - Your Kalshi account password
+    - PORT - Backend server port (5000 default)
+    - NODE_ENV - Environment type (development/production)
+  Instructions:
+    1. Copy to .env (cp .env.example .env)
+    2. Fill in your actual credentials
+    3. Keep .env private (never commit)
+
+.env (after setup)
+  Purpose: Actual environment variables (PRIVATE - NOT IN GIT)
+  Contains:
+    - Your actual Kalshi credentials
+    - Server configuration
+    - ⚠️ NEVER share or commit this file
+
+.gitignore
+  Purpose: Tell git which files to ignore
+  Prevents committing:
+    - .env files (credentials)
+    - node_modules/ (dependencies)
+    - dist/ (build output)
+    - IDE config files
+    - macOS .DS_Store
+
+═══════════════════════════════════════════════════════════════════
+DOCUMENTATION
+═══════════════════════════════════════════════════════════════════
+
+README.md
+  Purpose: Complete project overview
+  Covers:
+    - What the bot does
+    - Features and security model
+    - File structure explanation
+    - Quick start instructions
+    - Detailed usage guide
+    - Trading strategies explained
+    - Expected returns calculation
+    - Troubleshooting tips
+  Start here if: You want full understanding
+
+QUICK_START_MACOS.md
+  Purpose: Fastest possible setup (5 minutes)
+  Covers:
+    - Prerequisites
+    - Installation commands
+    - Configuration
+    - Running servers
+    - First trade setup
+    - Common issues and fixes
+  Start here if: You just want to get running fast
+
+MACOS_SETUP.md
+  Purpose: Detailed step-by-step walkthrough
+  Covers:
+    - Detailed prerequisite checks
+    - Installation with explanations
+    - Configuration step-by-step
+    - What each command does
+    - Expected output examples
+    - Comprehensive troubleshooting
+    - Daily operations guide
+  Start here if: You want detailed explanations
+
+FILES_SUMMARY.txt
+  Purpose: This file
+  Explains:
+    - Every file's purpose
+    - What each does
+    - How files work together
+
+═══════════════════════════════════════════════════════════════════
+STRATEGY & CONFIGURATION
+═══════════════════════════════════════════════════════════════════
+
+docs/kalshi-criteria-config.json
+  Purpose: Trading strategy definitions and examples
+  Contains:
+    - Overall strategy description
+    - 4 predefined trading criteria
+    - Details on each:
+      * Strategy type
+      * Entry conditions
+      * Expected profit ranges
+      * Risk levels
+      * Rationale and historical data
+    - Recommendations on which to start with
+  Use this as: Reference for creating your own criteria
+
+═══════════════════════════════════════════════════════════════════
+HOW FILES WORK TOGETHER
+═══════════════════════════════════════════════════════════════════
+
+User Flow:
+  1. User opens browser → frontend/index.html loads
+  2. React renders → frontend/src/App.jsx
+  3. Styling applied → frontend/src/App.css
+  4. User logs in → API call to backend/kalshi-server-oauth.js
+  5. Backend reads .env (credentials)
+  6. Backend authenticates with Kalshi API
+  7. Returns session token to frontend
+  8. Frontend stores token, shows dashboard
+  9. User clicks "Start Bot"
+  10. Backend spawns → backend/trading-bot.js process
+  11. Trading bot polls markets every 5 seconds
+  12. When criteria match → Trades executed via Kalshi API
+  13. Frontend displays activity in real-time
+
+Data Flow:
+  User Input (Browser)
+       ↓
+  frontend/src/App.jsx (Process)
+       ↓
+  backend/kalshi-server-oauth.js (Authenticate & Proxy)
+       ↓
+  Kalshi API (Execute)
+       ↓
+  backend/trading-bot.js (Monitor & Trade)
+       ↓
+  Activity Log (Display Results)
+
+═══════════════════════════════════════════════════════════════════
+WHICH FILE TO EDIT FOR COMMON TASKS
+═══════════════════════════════════════════════════════════════════
+
+Need to:                                    Edit:
+─────────────────────────────────────────────────────────────────
+Change styling/colors                   →   frontend/src/App.css
+Add new UI feature                      →   frontend/src/App.jsx
+Add new API endpoint                    →   backend/kalshi-server-oauth.js
+Change bot trading logic                →   backend/trading-bot.js
+Add Kalshi credentials                  →   .env (then cp from .env.example)
+Change port numbers                     →   .env and vite.config.js
+Add new trading strategy                →   Update in App.jsx, use JSON config
+Change update interval (5 sec)          →   backend/trading-bot.js POLL_INTERVAL
+Understand how it works                 →   README.md
+Get setup instructions                  →   QUICK_START_MACOS.md or MACOS_SETUP.md
+See trading strategies                  →   docs/kalshi-criteria-config.json
+
+═══════════════════════════════════════════════════════════════════
+DEPENDENCY MAP
+═══════════════════════════════════════════════════════════════════
+
+Frontend:
+  index.html → main.jsx → App.jsx + App.css → Requests to backend
+
+Backend:
+  kalshi-server-oauth.js → .env (credentials) → Kalshi API
+  kalshi-server-oauth.js → trading-bot.js (spawns) → Kalshi API
+
+═══════════════════════════════════════════════════════════════════
+FILE SIZES & INITIALIZATION
+═══════════════════════════════════════════════════════════════════
+
+After npm install:
+
+backend/node_modules/              ~150MB   (not committed to git)
+frontend/node_modules/             ~400MB   (not committed to git)
+
+Code only:
+backend/kalshi-server-oauth.js     ~10KB
+backend/trading-bot.js              ~5KB
+frontend/src/App.jsx               ~15KB
+frontend/src/App.css               ~12KB
+
+Total project size without node_modules: ~250KB
+
+═══════════════════════════════════════════════════════════════════
+PORTS & ENDPOINTS
+═══════════════════════════════════════════════════════════════════
+
+Backend API Server:
+  Host: localhost
+  Port: 5000 (configurable in .env)
+  URL: http://localhost:5000
+  Health check: http://localhost:5000/health
+
+Frontend Dev Server:
+  Host: localhost
+  Port: 5173 (Vite default)
+  URL: http://localhost:5173
+
+Kalshi API:
+  Base: https://api.kalshi.com/trade-api/v2
+  OAuth: Handled by backend (frontend never touches)
+
+═══════════════════════════════════════════════════════════════════
+SECURITY SUMMARY
+═══════════════════════════════════════════════════════════════════
+
+Who sees what:
+  ✅ You: Full code + credentials in .env
+  ✅ Backend: Credentials from .env, uses them securely
+  ❌ Frontend: Never sees credentials, only session tokens
+  ❌ Browser: Never stores passwords, only tokens
+  ❌ Network: Always uses HTTPS to Kalshi (secure)
+
+Token Lifecycle:
+  1. You provide email/password to frontend
+  2. Frontend sends to backend (same machine, safe)
+  3. Backend authenticates with Kalshi
+  4. Kalshi returns token
+  5. Backend returns token to frontend
+  6. Frontend uses token for API calls
+  7. Token expires after 24 hours
+  8. Must re-login to get new token
+
+Files to never commit:
+  - .env (contains credentials)
+  - node_modules/ (too large)
+  - dist/ (can rebuild)
+  - .DS_Store (macOS junk)
+
+═══════════════════════════════════════════════════════════════════
+READY TO START?
+═══════════════════════════════════════════════════════════════════
+
+1. Read: QUICK_START_MACOS.md (5 min)
+2. Setup: Follow the 5 steps (5 min)
+3. Trade: Add criteria & start bot (2 min)
+4. Monitor: Watch Activity Log
+
+Total time to first trade: ~15 minutes
+
+═══════════════════════════════════════════════════════════════════
