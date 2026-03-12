@@ -1,3 +1,5 @@
+console.log('📌 [STARTUP] Kalshi server module loading... (v2026-03-12-B3E0EB9)');
+
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
@@ -6,6 +8,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 dotenv.config();
+console.log('📌 [STARTUP] dotenv loaded');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
