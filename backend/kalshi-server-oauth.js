@@ -3375,7 +3375,27 @@ const server = app.listen(PORT, () => {
   console.log(`📈 Real-time trading decisions with Kelly Criterion position sizing\n`);
 
   // Start the daily analysis scheduler
-  scheduleDailyAnalysis();
+  try {
+    scheduleDailyAnalysis();
+  } catch (error) {
+    console.error('❌ Error scheduling daily analysis:', error);
+  }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('❌ Unhandled error:', err);
+  res.status(500).json({ error: 'Internal server error', message: err.message });
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled rejection:', reason);
 });
 
 module.exports = app;
