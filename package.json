@@ -1,0 +1,14 @@
+{
+  "name": "kalshi-trading-bot",
+  "version": "1.0.0",
+  "description": "Kalshi Trading Bot with AI agents and recommendations",
+  "private": true,
+  "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "install": "npm install --prefix backend && npm install --prefix frontend"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
