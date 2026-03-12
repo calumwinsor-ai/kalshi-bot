@@ -1,6 +1,6 @@
 {
   "name": "kalshi-trading-bot-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "OAuth-authenticated Kalshi trading bot server with automated trading",
   "main": "kalshi-server-oauth.js",
   "scripts": {
