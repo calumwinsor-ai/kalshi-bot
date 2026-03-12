@@ -3362,7 +3362,7 @@ function scheduleDailyAnalysis() {
 // ==========================================
 // PHASE 1: CORE ANALYTICS & INTELLIGENCE
 // ==========================================
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n🚀 Kalshi Trading Bot Server running on http://localhost:${PORT}`);
   console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`📍 CORS enabled for frontend on http://localhost:5173`);
@@ -3374,12 +3374,14 @@ const server = app.listen(PORT, () => {
   console.log(`📊 Daily analysis + automatic execution at 10:00 AM daily`);
   console.log(`📈 Real-time trading decisions with Kelly Criterion position sizing\n`);
 
-  // Start the daily analysis scheduler
-  try {
-    scheduleDailyAnalysis();
-  } catch (error) {
-    console.error('❌ Error scheduling daily analysis:', error);
-  }
+  // Start the daily analysis scheduler (deferred to avoid blocking startup)
+  setTimeout(() => {
+    try {
+      scheduleDailyAnalysis();
+    } catch (error) {
+      console.error('❌ Error scheduling daily analysis:', error);
+    }
+  }, 5000); // Start after 5 seconds to ensure server is ready
 });
 
 // Error handling middleware
