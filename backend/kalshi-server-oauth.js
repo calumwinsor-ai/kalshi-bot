@@ -10,6 +10,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+console.log(`Starting Kalshi Trading Bot Server...`);
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`PORT: ${PORT}`);
+
 // Import analysis agents
 const TradeAnalyzer = require('./trade-analyzer');
 const StrategyOptimizer = require('./strategy-optimizer');
@@ -3362,7 +3366,8 @@ function scheduleDailyAnalysis() {
 // ==========================================
 // PHASE 1: CORE ANALYTICS & INTELLIGENCE
 // ==========================================
-const server = app.listen(PORT, () => {
+try {
+  const server = app.listen(PORT, () => {
   console.log(`\n🚀 Kalshi Trading Bot Server running on http://localhost:${PORT}`);
   console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`📍 CORS enabled for frontend on http://localhost:5173`);
@@ -3384,7 +3389,11 @@ const server = app.listen(PORT, () => {
   //     console.error('❌ Error scheduling daily analysis:', error);
   //   }
   // }, 5000);
-});
+  });
+} catch (error) {
+  console.error('❌ Failed to start server:', error);
+  process.exit(1);
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
